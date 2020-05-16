@@ -3,7 +3,7 @@ import java.awt.event.KeyEvent;
 
 public class Rabbit {
     public static final Rectangle IMG_RABBIT = new Rectangle(48, 48);
-    private static final int MOV_DIST = 8;  //사용자가 이동버튼을 눌렀을 시 한번에 이동할 변위 값
+    private static final int MOV_DIST = 20;  //사용자가 이동버튼을 눌렀을 시 한번에 이동할 변위 값
     private Image imgRabbit;
     private int x;
     private int y;
@@ -45,6 +45,7 @@ public class Rabbit {
     }
 
     void move(int keyCode){   //사용자가 입력한 키 방향에 따라 객체의 좌표값 변경
+        System.out.println(keyCode);
         switch (keyCode){
             case KeyEvent.VK_UP -> y -= MOV_DIST;
             case KeyEvent.VK_RIGHT -> x += MOV_DIST;

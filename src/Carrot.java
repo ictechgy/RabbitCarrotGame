@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Carrot {
     public static final Rectangle IMG_CARROT = new Rectangle(48, 48);   //당근 이미지 크기
-    private static final int MOV_DIST = 8;    //랜덤으로 이동할 때 이동할 좌표 변위값
+    private static final int MOV_DIST = 16;    //랜덤으로 이동할 때 이동할 좌표 변위값
     private Image imgCarrot;    //당근 이미지
     private int x;  //중심점 x좌표
     private int y;  //중심점 y좌표

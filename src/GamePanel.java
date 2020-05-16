@@ -15,15 +15,15 @@ public class GamePanel extends JPanel implements KeyListener {
     private final Rectangle rabbit_rect;
     private final Rectangle carrot_rect;
 
-    GamePanel(int panelWidth, int panelHeight){
+    GamePanel(){
         Toolkit toolkit = Toolkit.getDefaultToolkit();
 
         score = 0;
 
 
-        carrot = Carrot.getInstance(toolkit, panelWidth, panelHeight);
+        carrot = Carrot.getInstance(toolkit, 700, 700);
         carrot.setLocation();   //랜덤위치에 생성
-        rabbit = Rabbit.getInstance(toolkit, panelWidth, panelHeight);
+        rabbit = Rabbit.getInstance(toolkit, 700, 700);
         rabbit.setLocation();   //화면 왼쪽 위에 생성
 
         carrot_image = carrot.getImage();
@@ -35,7 +35,6 @@ public class GamePanel extends JPanel implements KeyListener {
         carrot_rect = Carrot.IMG_CARROT.getBounds();
         carrot_rect.setLocation(carrot.getX(), carrot.getY());
 
-        addKeyListener(this);
     }
 
 

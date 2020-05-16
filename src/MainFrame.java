@@ -19,8 +19,9 @@ public class MainFrame extends JFrame {
 
         Container container = getContentPane();
         container.setLayout(new BorderLayout());
-        gamePanel = new GamePanel(WINDOW_WIDTH, WINDOW_HEIGHT-50);
+        gamePanel = new GamePanel();
         container.add(gamePanel, BorderLayout.CENTER);
+        addKeyListener(gamePanel);
 
         setVisible(true);
     }
@@ -40,7 +41,7 @@ public class MainFrame extends JFrame {
                 panel.checkCollision();
                 panel.repaint();
                 try{
-                    Thread.sleep(100);
+                    Thread.sleep(50);
                 }catch (InterruptedException e){
                     JOptionPane.showMessageDialog(null, "오류 발생", "오류가 발생하였습니다.", JOptionPane.WARNING_MESSAGE);
                     System.exit(1);
