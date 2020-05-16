@@ -7,36 +7,30 @@ public class Rabbit {
     private Image imgRabbit;
     private int x;
     private int y;
-    private static Rabbit INSTANCE;
     private int panelWidth;
     private int panelHeight;
 
-    public int getX() {
-        return x;
-    }
-    public int getY() {
-        return y;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     private Rabbit(){}  //singleton
 
-    public Rabbit getInstance(Toolkit toolkit, int panelWidth, int panelHeight){
-        if(INSTANCE == null){
-            INSTANCE = new Rabbit();
+    private static class LazyRabbitHolder{
+        public static final Rabbit INSTANCE = new Rabbit();
+    }
+
+    public static Rabbit getInstance(Toolkit toolkit, int panelWidth, int panelHeight){
+        Rabbit INSTANCE = LazyRabbitHolder.INSTANCE;
+        if(INSTANCE.imgRabbit == null){
             INSTANCE.imgRabbit = toolkit.getImage("res/rabbit.png");
-            INSTANCE.imgRabbit = imgRabbit.getScaledInstance(IMG_RABBIT.width, IMG_RABBIT.height, Image.SCALE_SMOOTH);
-            this.panelWidth = panelWidth;
-            this.panelHeight = panelHeight;
+            INSTANCE.imgRabbit = INSTANCE.imgRabbit.getScaledInstance(IMG_RABBIT.width, IMG_RABBIT.height, Image.SCALE_SMOOTH);
+            INSTANCE.panelWidth = panelWidth;
+            INSTANCE.panelHeight = panelHeight;
         }
         return INSTANCE;
+    }
+
+    void setLocation(){
+        x = IMG_RABBIT.width/2;
+        y = IMG_RABBIT.height/2;
+        //Rabbit의 기본 위치는 화면 왼쪽 위.
     }
 
     void move(KeyEvent e){   //사용자가 입력한 키 방향에 따라 객체의 좌표값 변경
@@ -47,10 +41,16 @@ public class Rabbit {
             case KeyEvent.VK_LEFT -> x -= MOV_DIST;
         }
 
-
+        if(x > panelWidth+IMG_RABBIT.width/2){   //당근 이미지가 오른쪽 화면을 넘어갔다면
+            x = 0;
+        }else if(x < -IMG_RABBIT.width/2){   //당근 이미지가 왼쪽 화면을 넘어갔다면
+            x = panelWidth;
+        }else if(y > panelHeight + IMG_RABBIT.height/2) {    //당근 이미지가 아래쪽 화면을 넘어갔다면
+            y = 0;
+        }else{  //위쪽 화면을 넘어간 경우
+            y = panelHeight;
+        }
 
     }
-
-
 
 }
