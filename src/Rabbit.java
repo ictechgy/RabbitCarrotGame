@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Rabbit {
-    private static final Rectangle IMG_RABBIT = new Rectangle(48, 48);
+    public static final Rectangle IMG_RABBIT = new Rectangle(48, 48);
     private static final int MOV_DIST = 8;  //사용자가 이동버튼을 눌렀을 시 한번에 이동할 변위 값
     private Image imgRabbit;
     private int x;
@@ -29,12 +29,23 @@ public class Rabbit {
 
     void setLocation(){
         x = IMG_RABBIT.width/2;
-        y = IMG_RABBIT.height/2;
-        //Rabbit의 기본 위치는 화면 왼쪽 위.
+        y = IMG_RABBIT.height/2 + 30;
+        //Rabbit의 기본 위치는 화면 왼쪽 위 부근.
     }
 
-    void move(KeyEvent e){   //사용자가 입력한 키 방향에 따라 객체의 좌표값 변경
-        switch (e.getKeyCode()){
+    int getX(){
+        return x;
+    }
+    int getY(){
+        return y;
+    }
+
+    Image getImage(){
+        return imgRabbit;
+    }
+
+    void move(int keyCode){   //사용자가 입력한 키 방향에 따라 객체의 좌표값 변경
+        switch (keyCode){
             case KeyEvent.VK_UP -> y -= MOV_DIST;
             case KeyEvent.VK_RIGHT -> x += MOV_DIST;
             case KeyEvent.VK_DOWN -> y += MOV_DIST;

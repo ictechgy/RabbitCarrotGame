@@ -1,10 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainFrame extends JFrame {
     private static final int WINDOW_WIDTH = 700;
     private static final int WINDOW_HEIGHT = 800;
     private static final String WINDOW_TITLE = "Rabbit Carrot Game by AJH / Character Design by PYJ";
+    private GamePanel gamePanel;
 
     public MainFrame(){
         setTitle(WINDOW_TITLE);
@@ -16,13 +19,34 @@ public class MainFrame extends JFrame {
 
         Container container = getContentPane();
         container.setLayout(new BorderLayout());
-        container.add(new GamePanel(), BorderLayout.CENTER);
+        gamePanel = new GamePanel(WINDOW_WIDTH, WINDOW_HEIGHT-50);
+        container.add(gamePanel, BorderLayout.CENTER);
 
         setVisible(true);
     }
 
+    GamePanel getGamePanel(){
+        return gamePanel;
+    }
+
 
     public static void main(String[] args){
-        new MainFrame();
+        MainFrame mainFrame = new MainFrame();
+        GamePanel panel = mainFrame.getGamePanel();
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(()->{
+            while(true){
+                panel.moveCarrot();
+                panel.checkCollision();
+                panel.repaint();
+                try{
+                    Thread.sleep(100);
+                }catch (InterruptedException e){
+                    JOptionPane.showMessageDialog(null, "오류 발생", "오류가 발생하였습니다.", JOptionPane.WARNING_MESSAGE);
+                    System.exit(1);
+                }
+            }
+        });
+
     }
 }

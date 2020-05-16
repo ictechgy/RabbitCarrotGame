@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class Carrot {
-    private static final Rectangle IMG_CARROT = new Rectangle(48, 48);   //당근 이미지 크기
+    public static final Rectangle IMG_CARROT = new Rectangle(48, 48);   //당근 이미지 크기
     private static final int MOV_DIST = 8;    //랜덤으로 이동할 때 이동할 좌표 변위값
     private Image imgCarrot;    //당근 이미지
     private int x;  //중심점 x좌표
@@ -31,6 +31,17 @@ public class Carrot {
     void setLocation(){
         x = random.nextInt(panelWidth-IMG_CARROT.width)+IMG_CARROT.width/2;
         y = random.nextInt(panelHeight-IMG_CARROT.height)+IMG_CARROT.height/2;      //랜덤위치에 생성
+    }
+
+    int getX(){
+        return x;
+    }
+    int getY(){
+        return y;
+    }
+
+    Image getImage(){
+        return imgCarrot;
     }
 
     void move(){
