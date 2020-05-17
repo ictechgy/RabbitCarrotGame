@@ -2,47 +2,38 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-
 public class GamePanel extends JPanel implements KeyListener {
-    private int score;
+    private Toolkit toolkit;    //이미지를 불러오기 위한 객체
+    private int score;  //점수
 
-    private final Rabbit rabbit;
-    private final Image rabbit_image;
+    private Rabbit rabbit;    //사용자 Rabbit 객체
+    private Carrot carrot;    //당근 객체
 
-    private final Carrot carrot;
-    private final Image carrot_image;
-
-    private final Rectangle rabbit_rect;
-    private final Rectangle carrot_rect;
+    private boolean isLoaded;   //최초 로딩인지의 여부 판단 flag
 
     GamePanel(){
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        toolkit = Toolkit.getDefaultToolkit();
         score = 0;
+        isLoaded = false; //아직 panel의 사이즈 측정 불가능
 
-        carrot = Carrot.getInstance(toolkit, 700, 700);
-        carrot.setLocation();   //랜덤위치에 생성
-        rabbit = Rabbit.getInstance(toolkit, 700, 700);
-        rabbit.setLocation();   //화면 왼쪽 위에 생성
-
-        carrot_image = carrot.getImage();
-        rabbit_image = rabbit.getImage();
-
-        rabbit_rect = Rabbit.IMG_RABBIT.getBounds();
-        rabbit_rect.setLocation(rabbit.getX(), rabbit.getY());
-
-        carrot_rect = Carrot.IMG_CARROT.getBounds();
-        carrot_rect.setLocation(carrot.getX(), carrot.getY());
-
+        carrot = Carrot.getInstance(toolkit);
+        rabbit = Rabbit.getInstance(toolkit);       //각각의 싱글톤 객체 얻어오기
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.println("paintComponent called!!!");
+        if(!isLoaded){                  //화면이 최초 로딩되는 것이라면
+            rabbit.setPanelSize(getWidth(), getHeight());
+            carrot.setPanelSize(getWidth(), getHeight());
 
-        g.drawImage(rabbit_image, rabbit.getX(), rabbit.getY(), this);
-        g.drawImage(carrot_image, carrot.getX(), carrot.getY(), this);
+            isLoaded = true;    //로딩 완료
+        }
+        rabbit.setLocation();   //사용자를 화면 왼쪽 위에 생성
+        carrot.setLocation();   //당근을 랜덤위치에 생성
+
+        g.drawImage(rabbit.getImage(), Rabbit.RECT_RABBIT.x, Rabbit.RECT_RABBIT.y, this);
+        g.drawImage(carrot.getImage(), Carrot.RECT_CARROT.x, Carrot.RECT_CARROT.y, this);
         g.setFont(new Font(null, Font.BOLD, 20));
         g.drawString("Score: " + score + "점", 10, 30);
     }
@@ -58,6 +49,7 @@ public class GamePanel extends JPanel implements KeyListener {
         addVetoableChangeListener(this);
         addHierarchyBoundsListener(this);
         -> Listener는 GamePanel 자체에 구현
+        -> 여러가지 테스팅을 해보았지만 콜백 리스너만으로 panel사이즈 값을 얻어서 Rabbit 및 Carrot에 초기화하는 것은 힘들어보임
      */
 
     @Override
@@ -68,7 +60,6 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         rabbit.move(e.getKeyCode());
-        rabbit_rect.setLocation(rabbit.getX(), rabbit.getY());
     }
 
     @Override
@@ -77,10 +68,10 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     void checkCollision(){
-        if(rabbit_rect.intersects(carrot_rect)){
+        System.out.println(Rabbit.RECT_RABBIT.intersects(Carrot.RECT_CARROT));
+        if(Rabbit.RECT_RABBIT.intersects(Carrot.RECT_CARROT)){    //두 객체에 대해 겹치는 부분이 존재한다면
             score += 10;
-            carrot.setLocation();   //새로운 위치로 새로 생성
-            carrot_rect.setLocation(carrot.getX(), carrot.getY());
+            carrot.setLocation();   //carrot을 새로운 위치로 새로 생성
         }
     }
 
