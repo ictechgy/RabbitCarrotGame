@@ -103,16 +103,21 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     private int validX(int x, int imgWidth){
-        if(x > getWidth() - imgWidth/2){   //당근 이미지가 반 이상 오른쪽 화면을 넘어갔다면
+        if(x > getWidth() - imgWidth/2){   // 이미지가 반 이상 오른쪽 화면을 넘어갔다면
             x = -imgWidth/2;   //왼쪽 화면으로 옮기되, 오른쪽 절반만 보이게
-        }else if(x < -WIDTH/2) {   //당근 이미지가 왼쪽 화면을 반 이상 넘어갔다면
-            x = panelWidth - WIDTH / 2;
-        }
+        }else if(x < -WIDTH/2) {   // 이미지가 왼쪽 화면을 반 이상 넘어갔다면
+            x = getWidth() - imgWidth/2;
+        }   //그 외의 경우에 x는 그대로 x
         return x;
     }
 
     private int validY(int y, int imgHeight){
-
+        if(y > getHeight() - imgHeight/2){   //이미지가 반 이상 아래로 넘어갔다면
+            y = -imgHeight/2;   //위쪽으로
+        }else if(y < -imgHeight/2) {   //이미지가 위로 반 이상 올라갔다면
+            y = getHeight() - imgHeight/2;
+        }   //이외의 경우에는 그대로
+        return y;
     }
 
     @Override
@@ -121,86 +126,40 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     void checkCollision(){
-        if(r_rect.intersects(c_rect)){    //두 객체에 대해 겹치는 부분이 존재한다면
+        int leftX = rabbit.getX();
+        int rightX = rabbit.getX() + Rabbit.WIDTH;
+        int ceilY = rabbit.getY();
+        int floorY = rabbit.getY() + Rabbit.HEIGHT;
+
+        int c_centerX = carrot.getX() + Carrot.WIDTH/2;
+        int c_centerY = carrot.getY() + Carrot.HEIGHT/2;
+
+        if(c_centerX > leftX && c_centerX < rightX && c_centerY > ceilY && c_centerY < floorY){    //두 객체 충돌 시
             score += 10;
-            carrot.setLocation();   //carrot을 새로운 위치로 새로 생성
+            carrot.setLocation(getCarrotPossition());   //carrot을 새로운 위치로 새로 생성
         }
     }
 
-    void moveCarrot(){
-        carrot.move();
+    void moveCarrot(){  //Carrot을 일정확률로 이동
+        int num = random.nextInt(50);
+        if(num >= 4) return;
+
+        int x = carrot.getX();
+        int y = carrot.getY();
+
+        switch (num){
+            case 0 -> y -= MOV_RAB;
+            case 1 -> x += MOV_RAB;
+            case 2 -> y += MOV_RAB;
+            case 3 -> x -= MOV_RAB;
+        }
+        //랜덤수에 의해 각 방향으로 MOV_RAB만큼 이동한다.
+
+        x = validX(x, Carrot.WIDTH);
+        y = validY(y, Carrot.HEIGHT);
+
+        carrot.setX(x);
+        carrot.setY(y);
     }
 
 }
-
-
-//carrot
-
-    void move(){
-        int direction = random.nextInt(100);  //0 ~ 9까지의 난수를 생성한다. 0 ~ 3이 나온 경우 각 방향으로 이동, 나머지의 경우 이동하지 않는다.
-        if(direction >= 4) return;
-
-        int x = rect.x;
-        int y = rect.y;
-
-        switch (direction){
-            case 0 -> y -= MOV_DIST;   //북
-            case 1 -> x += MOV_DIST;    //동
-            case 2 -> y += MOV_DIST;   //남
-            case 3 -> x -= MOV_DIST;    //서
-        }   //각 랜덤 방향으로 MOV_DIST만큼 이동한다.
-
-        if(x > panelWidth - WIDTH/2){   //당근 이미지가 반 이상 오른쪽 화면을 넘어갔다면
-            x = -WIDTH/2;   //왼쪽 화면으로 옮기되, 오른쪽 절반만 보이게
-        }else if(x < -WIDTH/2){   //당근 이미지가 왼쪽 화면을 반 이상 넘어갔다면
-            x = panelWidth - WIDTH/2;
-        }else if(y > panelHeight - HEIGHT/2) {    //당근 이미지가 아래쪽 화면을 반 이상 넘어갔다면
-            y = -HEIGHT/2;
-        }else{  //위쪽 화면을 반 이상 넘어간 경우
-            y = panelHeight - HEIGHT/2;
-        }
-
-        rect.x = x;
-        rect.y = y;
-    }
-
-    //rabbit
-    void move(int keyCode){   //사용자가 입력한 키 방향에 따라 객체의 좌표값 변경
-        int x = rect.x;
-        int y = rect.y;
-
-        switch (keyCode){
-            case KeyEvent.VK_UP -> {
-                y -= MOV_DIST;
-                System.out.println("윗방향키");
-            }
-            case KeyEvent.VK_RIGHT -> {
-                x += MOV_DIST;
-                System.out.println("오른방향키");
-            }
-            case KeyEvent.VK_DOWN -> {
-                y += MOV_DIST;
-                System.out.println("아래방향키");
-            }
-            case KeyEvent.VK_LEFT -> {
-                x -= MOV_DIST;
-                System.out.println("왼쪽방향키");
-            }
-            default -> {
-                return; //다른 키를 입력한 경우 해당 입력 무시
-            }
-        }
-
-        if(x > panelWidth - WIDTH/2){   //당근 이미지가 오른쪽 화면을 넘어갔다면
-            x = -WIDTH/2;
-        }else if(x < -WIDTH/2){   //당근 이미지가 왼쪽 화면을 넘어갔다면
-            x = panelWidth - WIDTH/2;
-        }else if(y > panelHeight - HEIGHT/2) {    //당근 이미지가 아래쪽 화면을 넘어갔다면
-            y = -HEIGHT/2;
-        }else{  //위쪽 화면을 넘어간 경우
-            y = panelHeight - HEIGHT/2;
-        }
-
-        rect.x = x;
-        rect.y = y;
-    }
