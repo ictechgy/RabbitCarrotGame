@@ -11,8 +11,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
     private int score;  //점수
     private int remain; //남은 시간
-    private Timer timer;
-    private TimerTask t_task;
+    private final Timer timer;
 
     private final Rabbit rabbit;    //사용자 Rabbit 객체
     private final Carrot carrot;    //당근 객체
@@ -26,14 +25,14 @@ public class GamePanel extends JPanel implements KeyListener {
         isLoaded = false; //아직 panel의 사이즈 측정 불가능
 
         timer = new Timer();
-        t_task = new TimerTask() {
+        TimerTask t_task = new TimerTask() {
             @Override
             public void run() {
-                if(remain > 0){
+                if (remain > 0) {
                     remain -= 1;
-                }else{
+                } else {
                     timer.cancel();
-                    JOptionPane.showMessageDialog(null, "시간 초과!!", "제한시간 내에 점수를 달성하지 못했습니다. Carrot Win!!", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "제한시간 내에 점수를 달성하지 못했습니다. Carrot Win!!", "시간 초과!!", JOptionPane.WARNING_MESSAGE);
                     System.exit(0);
                 }
             }
@@ -47,7 +46,7 @@ public class GamePanel extends JPanel implements KeyListener {
         random = new Random();
     }
 
-    private Point getCarrotPossition(){
+    private Point getRandomPossition(){
         int x = random.nextInt(getWidth() - Carrot.WIDTH);
         int y = random.nextInt(getHeight() - Carrot.HEIGHT);
         return new Point(x, y);
@@ -58,8 +57,8 @@ public class GamePanel extends JPanel implements KeyListener {
         super.paintComponent(g);
         if(!isLoaded){                  //화면이 최초 로딩되는 것이라면
 
-            rabbit.setLocation(10, 50);   //사용자를 화면 왼쪽 위에 생성
-            carrot.setLocation(getCarrotPossition());   //당근을 랜덤위치에 생성
+            rabbit.setLocation(getRandomPossition());   //사용자도 매번 랜덤위치에 생성
+            carrot.setLocation(getRandomPossition());   //당근을 랜덤위치에 생성
 
             isLoaded = true;    //로딩 완료
         }
@@ -124,7 +123,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private int validX(int x, int imgWidth){
         if(x > getWidth() - imgWidth/2){   // 이미지가 반 이상 오른쪽 화면을 넘어갔다면
             x = -imgWidth/2;   //왼쪽 화면으로 옮기되, 오른쪽 절반만 보이게
-        }else if(x < -WIDTH/2) {   // 이미지가 왼쪽 화면을 반 이상 넘어갔다면
+        }else if(x < -imgWidth/2) {   // 이미지가 왼쪽 화면을 반 이상 넘어갔다면
             x = getWidth() - imgWidth/2;
         }   //그 외의 경우에 x는 그대로 x
         return x;
@@ -157,10 +156,10 @@ public class GamePanel extends JPanel implements KeyListener {
             score += 10;
             if(score >= 100){
                 timer.cancel();
-                JOptionPane.showMessageDialog(null, "점수 달성!!", "축하드립니다!! 100점 달성! Rabbit Win!!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "축하드립니다!! 100점 달성! Rabbit Win!!", "점수 달성!!", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
             }
-            carrot.setLocation(getCarrotPossition());   //carrot을 새로운 위치로 새로 생성
+            carrot.setLocation(getRandomPossition());   //carrot을 새로운 위치로 새로 생성
         }
     }
 

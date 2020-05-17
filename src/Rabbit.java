@@ -21,9 +21,9 @@ public class Rabbit {
         return LazyRabbitHolder.INSTANCE;
     }
 
-    void setLocation(int x, int y){
-        this.x = x;
-        this.y = y;
+    void setLocation(Point point){
+        x = point.x;
+        y = point.y;
     }
 
     Image getImage(){
