@@ -45,12 +45,23 @@ public class Rabbit {
     }
 
     void move(int keyCode){   //사용자가 입력한 키 방향에 따라 객체의 좌표값 변경
-        System.out.println(keyCode);
         switch (keyCode){
-            case KeyEvent.VK_UP -> y -= MOV_DIST;
-            case KeyEvent.VK_RIGHT -> x += MOV_DIST;
-            case KeyEvent.VK_DOWN -> y += MOV_DIST;
-            case KeyEvent.VK_LEFT -> x -= MOV_DIST;
+            case KeyEvent.VK_UP -> {
+                y -= MOV_DIST;
+                System.out.println("윗방향키");
+            }
+            case KeyEvent.VK_RIGHT -> {
+                x += MOV_DIST;
+                System.out.println("오른방향키");
+            }
+            case KeyEvent.VK_DOWN -> {
+                y += MOV_DIST;
+                System.out.println("아래방향키");
+            }
+            case KeyEvent.VK_LEFT -> {
+                x -= MOV_DIST;
+                System.out.println("왼쪽방향키");
+            }
         }
 
         if(x > panelWidth+IMG_RABBIT.width/2){   //당근 이미지가 오른쪽 화면을 넘어갔다면
