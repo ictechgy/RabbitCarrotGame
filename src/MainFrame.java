@@ -38,10 +38,15 @@ public class MainFrame extends JFrame {
         ExecutorService executorService = Executors.newSingleThreadExecutor();  //별도의 쓰레드 1개 받아옴
         executorService.execute(()->{
             while(true){
-                panel.moveCarrot(); //panel에 있는 당근 움직이기
-                panel.checkCollision(); //플레이어와의 충돌체크
-                panel.repaint();    //화면 다시 그리기
                 try{
+                    if(!mainFrame.isActive()) {
+                        Thread.sleep(50);
+                        continue;           //아직 메인 프레임이 준비되지 않은 경우 잠시 기다림.
+                    }
+                    panel.checkCollision(); //플레이어와의 충돌체크
+                    panel.moveCarrot(); //panel에 있는 당근 움직이기
+                    panel.repaint();    //화면 다시 그리기
+
                     Thread.sleep(50);   //쓰레드를 일시 정지.
                 }catch (InterruptedException e){
                     JOptionPane.showMessageDialog(null, "오류 발생", "오류가 발생하였습니다.", JOptionPane.WARNING_MESSAGE);
