@@ -1,14 +1,9 @@
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
 
-public class GamePanel extends JPanel implements KeyListener, ContainerListener, ComponentListener, PropertyChangeListener, HierarchyListener, AncestorListener, VetoableChangeListener, HierarchyBoundsListener {
+
+public class GamePanel extends JPanel implements KeyListener {
     private int score;
 
     private final Rabbit rabbit;
@@ -38,6 +33,23 @@ public class GamePanel extends JPanel implements KeyListener, ContainerListener,
         carrot_rect = Carrot.IMG_CARROT.getBounds();
         carrot_rect.setLocation(carrot.getX(), carrot.getY());
 
+    }
+
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        System.out.println("paintComponent called!!!");
+
+        g.drawImage(rabbit_image, rabbit.getX(), rabbit.getY(), this);
+        g.drawImage(carrot_image, carrot.getX(), carrot.getY(), this);
+        g.setFont(new Font(null, Font.BOLD, 20));
+        g.drawString("Score: " + score + "점", 10, 30);
+    }
+    /*
+        테스팅해보니 paintComponent는 repaint()마다 호출되며, 사용자가 버튼으로 움직일때는 어떠한 콜백도 작동하지 않음
+        최초 paintComponent 호출 전에는 componentResized가 한번 호출된다.
+        테스팅한 Listener 종류는 아래와 같다.(생성자에서 등록)
         addContainerListener(this);
         addComponentListener(this);
         addPropertyChangeListener(this);
@@ -45,18 +57,8 @@ public class GamePanel extends JPanel implements KeyListener, ContainerListener,
         addAncestorListener(this);
         addVetoableChangeListener(this);
         addHierarchyBoundsListener(this);
-    }
-
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        g.drawImage(rabbit_image, rabbit.getX(), rabbit.getY(), this);
-        g.drawImage(carrot_image, carrot.getX(), carrot.getY(), this);
-        g.setFont(new Font(null, Font.BOLD, 20));
-        g.drawString("Score: " + score + "점", 10, 30);
-    }
+        -> Listener는 GamePanel 자체에 구현
+     */
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -86,77 +88,4 @@ public class GamePanel extends JPanel implements KeyListener, ContainerListener,
         carrot.move();
     }
 
-
-    @Override
-    public void componentResized(ComponentEvent e) {
-        System.out.println("componentResized");
-    }
-
-    @Override
-    public void componentMoved(ComponentEvent e) {
-        System.out.println("componentMoved");
-    }
-
-    @Override
-    public void componentShown(ComponentEvent e) {
-        System.out.println("componentShown");
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent e) {
-        System.out.println("componentHidden");
-    }
-
-    @Override
-    public void componentAdded(ContainerEvent e) {
-        System.out.println("componentAdded");
-    }
-
-    @Override
-    public void componentRemoved(ContainerEvent e) {
-        System.out.println("componentRemoved");
-    }
-
-    @Override
-    public void hierarchyChanged(HierarchyEvent e) {
-        System.out.println("hierarchyChanged");
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println("propertyChange");
-    }
-
-    @Override
-    public void ancestorMoved(HierarchyEvent e) {
-        System.out.println("ancestorMoved");
-    }
-
-    @Override
-    public void ancestorResized(HierarchyEvent e) {
-        System.out.println("ancestorResized");
-    }
-
-    @Override
-    public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
-        System.out.println("vetoableChange");
-
-    }
-
-    @Override
-    public void ancestorAdded(AncestorEvent event) {
-        System.out.println("ancestorAdded");
-
-    }
-
-    @Override
-    public void ancestorRemoved(AncestorEvent event) {
-        System.out.println("ancestorRemoved");
-
-    }
-
-    @Override
-    public void ancestorMoved(AncestorEvent event) {
-        System.out.println("ancestorMoved");
-    }
 }
