@@ -2,12 +2,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GamePanel extends JPanel implements KeyListener {
     private static final int MOV_RAB = 20;  //rabbit의 이동변위
     private static final int MOV_CAR = 25;  //carrot의 이동변위
 
     private int score;  //점수
+    private int remain; //남은 시간
+    private Timer timer;
+    private TimerTask t_task;
 
     private final Rabbit rabbit;    //사용자 Rabbit 객체
     private final Carrot carrot;    //당근 객체
@@ -17,7 +22,24 @@ public class GamePanel extends JPanel implements KeyListener {
 
     GamePanel(){
         score = 0;  //0점으로 초기화
+        remain = 45;
         isLoaded = false; //아직 panel의 사이즈 측정 불가능
+
+        timer = new Timer();
+        t_task = new TimerTask() {
+            @Override
+            public void run() {
+                if(remain > 0){
+                    remain -= 1;
+                }else{
+                    timer.cancel();
+                    JOptionPane.showMessageDialog(null, "시간 초과!!", "제한시간 내에 점수를 달성하지 못했습니다. Carrot Win!!", JOptionPane.WARNING_MESSAGE);
+                    System.exit(0);
+                }
+            }
+        };
+
+        timer.schedule(t_task, 1050, 1000); //첫 딜레이는 1초, 이후 1초마다 run 작동 (바로 panel이 로딩되지 않으므로 50밀리초 보정값 부여)
 
         carrot = Carrot.getInstance();
         rabbit = Rabbit.getInstance();       //각각의 싱글톤 객체 얻어오기
@@ -46,6 +68,7 @@ public class GamePanel extends JPanel implements KeyListener {
         g.drawImage(carrot.getImage(), carrot.getX(), carrot.getY(), this);
         g.setFont(new Font(null, Font.BOLD, 20));
         g.drawString("Score: " + score + "점", 10, 30);
+        g.drawString("남은 시간: " + remain + "초", 550, 30);
     }
     /*
         테스팅해보니 paintComponent는 repaint()마다 호출되며, 사용자가 버튼으로 움직일때는 어떠한 콜백도 작동하지 않음
@@ -75,19 +98,15 @@ public class GamePanel extends JPanel implements KeyListener {
         switch (e.getKeyCode()){
             case KeyEvent.VK_UP -> {
                 y -= MOV_RAB;
-                System.out.println("윗방향키");
             }
             case KeyEvent.VK_RIGHT -> {
                 x += MOV_RAB;
-                System.out.println("오른방향키");
             }
             case KeyEvent.VK_DOWN -> {
                 y += MOV_RAB;
-                System.out.println("아래방향키");
             }
             case KeyEvent.VK_LEFT -> {
                 x -= MOV_RAB;
-                System.out.println("왼쪽방향키");
             }
             default -> {
                 return; //다른 키를 입력한 경우 해당 입력 무시
@@ -136,6 +155,11 @@ public class GamePanel extends JPanel implements KeyListener {
 
         if(c_centerX > leftX && c_centerX < rightX && c_centerY > ceilY && c_centerY < floorY){    //두 객체 충돌 시
             score += 10;
+            if(score >= 100){
+                timer.cancel();
+                JOptionPane.showMessageDialog(null, "점수 달성!!", "축하드립니다!! 100점 달성! Rabbit Win!!", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+            }
             carrot.setLocation(getCarrotPossition());   //carrot을 새로운 위치로 새로 생성
         }
     }
