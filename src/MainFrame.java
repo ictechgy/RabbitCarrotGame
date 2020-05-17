@@ -13,7 +13,7 @@ public class MainFrame extends JFrame {             //RaCaGame
         setTitle(WINDOW_TITLE);     //타이틀 설정
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);   //사이즈 설정
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(screenSize.width/2-WINDOW_WIDTH, screenSize.height/2-WINDOW_HEIGHT);    //사용자 화면의 가운데에 배치
+        setLocation(screenSize.width/2-WINDOW_WIDTH/2, screenSize.height/2-WINDOW_HEIGHT/2);    //사용자 화면의 가운데에 배치
 
         setResizable(false);    //창 크기 변경 불가
         setDefaultCloseOperation(EXIT_ON_CLOSE);    //닫기 버튼 눌렀을 시 닫히도록
