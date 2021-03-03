@@ -2,19 +2,24 @@
    
 &nbsp;   
    
-## 🤔 본 어플리케이션을 만들게된 계기 (What made me create this application?)
+## 🤔 본 프로그램을 만들게된 계기 (What made me create this program?)
+간단한 게임을 한번 만들어보자.
    
 &nbsp;   
    
 ## 💻 개발 기간 (Development Period)
+4~5일
    
 &nbsp;   
    
 ## 📚 사용한 라이브러리 (Used libraries)
+없음
    
 &nbsp;   
    
 ## 🚀 사용했거나 사용하려 했던 패턴/스킬 (Used Or Tried Patterns And Skills)
+1. Singletone(Lazy Holder)
+2. MultiThread(ExcutorService)
    
 &nbsp;   
    
